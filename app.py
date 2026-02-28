@@ -1,8 +1,10 @@
 from fastapi import FastAPI
 from fastapi.responses import FileResponse
-from models import User
+from models import User, User2, Feedback
+
 
 app = FastAPI()
+feedbacks = []  
 
 
 # ===== Задание 1-1 =====
@@ -32,3 +34,15 @@ user = User(**user_data)
 @app.get("/users/{user_id}", response_model=User)
 def get_user(user_id: int):
     return user
+
+# ===== Задание 1_5 =====
+@app.post('/user')
+def create_user(user: User2):
+    return {"name" : user.name, "age": user.age, "is_adult": user.age >= 18}
+# Реализация отправки POST запроса с помощью библиотеки requests находится в файле req.py   
+
+# ===== Задание 2_1 и 2_2 =====
+@app.post('/feedback')
+def submit_feedback(feedback: Feedback):
+    feedbacks.append({"name": feedback.name, "message": feedback.message})
+    return {"message": f"Спасибо, {feedback.name}! Ваш отзыв сохранён."}
